@@ -5,7 +5,7 @@
  */
 
 <template>
-  <div class="M-Flipper" style="margin-left:60px">
+  <div class="M-Flipper">
 
     <!-- 默认数字的上下两部分 -->
     <div class="digital front " :class="[UpperHalfNumber]"></div>
@@ -250,14 +250,14 @@ export default {
 .M-Flipper .digital.front:before {
   top: 0;
   bottom: 50%;
-  border-radius: 10px 10px 0 0;
+  border-radius: 8px 8px 0 0;
   border-bottom: solid 1px #666;
 }
 
 .M-Flipper .digital.back:after {
   top: 50%;
   bottom: 0;
-  border-radius: 0 0 10px 10px;
+  border-radius: 0 0 8px 8px;
   line-height: 0;
 }
 
