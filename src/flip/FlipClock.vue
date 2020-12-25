@@ -59,7 +59,6 @@ export default {
   },
   methods: {
     add_comma_toThousands(num) {
-      // num = (num || 0).toString();
       let result = '';
       while (num.length > 3) {
           result = ',' + num.slice(-3) + result;
@@ -71,11 +70,16 @@ export default {
 
     // 开始计时
     updateView(newNumber) {
-      // 位数不足时补零,以便于遍历赋值
-      if (newNumber.length < this.maxLength) { newNumber = '00000000000000'.substring(0, (this.maxLength - newNumber.length)) + newNumber }
+      // 转为字符串
+      newNumber = (newNumber || 0).toString();
 
+      // 位数不足时补零,以便于遍历赋值
+      if (this.maxLength > newNumber.length) { newNumber = '00000000000000'.substring(0, (this.maxLength - newNumber.length)) + newNumber }
+
+      // 千分位加逗号
       newNumber = this.add_comma_toThousands(newNumber).split('')
 
+      // 单个数字赋值
       for (let i = 0; i <= this.arr.length - 1; i++) {
         if (this.arr[i]) {
           let _number = newNumber[i] ? Number(newNumber[i]) : 0

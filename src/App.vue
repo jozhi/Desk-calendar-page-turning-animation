@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import FlipClock from './components/FlipClock.vue'
+import FlipClock from './flip/FlipClock.vue'
 
 export default {
   name: 'app',
