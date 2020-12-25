@@ -49,7 +49,7 @@ export default {
   },
   created() {
     // created 刚好先行初始化子组件
-    this.FlipperSort = this.add_comma_toThousands('00000000000000'.substring(0, this.maxLength)).split('')
+    this.FlipperSort = this.add_comma_toThousands('000000000000'.substring(0, this.maxLength)).split('')
   },
   mounted() {
     // mounted 中对构建好的
@@ -74,7 +74,7 @@ export default {
       newNumber = (newNumber || 0).toString();
 
       // 位数不足时补零,以便于遍历赋值
-      if (this.maxLength > newNumber.length) { newNumber = '00000000000000'.substring(0, (this.maxLength - newNumber.length)) + newNumber }
+      if (this.maxLength > newNumber.length) { newNumber = '000000000000'.substring(0, (this.maxLength - newNumber.length)) + newNumber }
 
       // 千分位加逗号
       newNumber = this.add_comma_toThousands(newNumber).split('')
