@@ -6,7 +6,8 @@
 <template>
   <div class="FlipClock">
     <span v-for="(option,index) in FlipperSort" :key="index">
-      <Flipper :ref="`flipper${index}`" />
+      <span class="split" v-if="thousandsSeparator && option ===','">,</span>
+      <Flipper v-else :ref="`flipper${index}`" />
     </span>
   </div>
 </template>
@@ -28,9 +29,13 @@ export default {
       type: [Number, String],
       default: 0
     },
-    minLength: {
+    maxLength: {
       type: Number,
       default: 0
+    },
+    thousandsSeparator: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
@@ -44,22 +49,38 @@ export default {
   },
   created() {
     // created 刚好先行初始化子组件
-    this.FlipperSort = '0000000000'.substring(0, this.minLength).split('')
+    this.FlipperSort = this.add_comma_toThousands('00000000000000'.substring(0, this.maxLength)).split('')
   },
   mounted() {
     // mounted 中对构建好的
     for (let i = this.FlipperSort.length - 1; i >= 0; i--) {
-      this.arr[i] = this.$refs['flipper' + i]
+      this.FlipperSort[i] !== ',' && (this.arr[i] = this.$refs['flipper' + i])
     }
   },
   methods: {
+    add_comma_toThousands(num) {
+      // num = (num || 0).toString();
+      let result = '';
+      while (num.length > 3) {
+          result = ',' + num.slice(-3) + result;
+          num = num.slice(0, num.length - 3);
+      }
+      if (num) { result = num + result; }
+      return result;
+    },
+
     // 开始计时
     updateView(newNumber) {
-      newNumber = String(newNumber).split('')
+      // 位数不足时补零,以便于遍历赋值
+      if (newNumber.length < this.maxLength) { newNumber = '00000000000000'.substring(0, (this.maxLength - newNumber.length)) + newNumber }
 
-      for (let i = 0; i <= this.minLength - 1; i++) {
-        let _number = newNumber[i] ? Number(newNumber[i]) : 0
-        this.arr[i].length && this.arr[i][0].Next(_number)
+      newNumber = this.add_comma_toThousands(newNumber).split('')
+
+      for (let i = 0; i <= this.arr.length - 1; i++) {
+        if (this.arr[i]) {
+          let _number = newNumber[i] ? Number(newNumber[i]) : 0
+          this.arr[i].length && this.arr[i][0].Next(_number)
+        }
       }
     }
   }
@@ -70,8 +91,16 @@ export default {
 .FlipClock {
     text-align: center;
 }
+.FlipClock .split {
+  display: inline-block;
+  position: relative;
+  width: 15px;
+  font-size: 55px;
+  line-height: 1;
+  top: -10px;
+}
 .FlipClock .M-Flipper {
-    margin: 0 3px;
+    margin: 0 10px;
 }
 .FlipClock em {
     display: inline-block;

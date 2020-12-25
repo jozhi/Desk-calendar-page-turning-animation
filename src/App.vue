@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <FlipClock :minLength = minLength :changeNumber = changeNumber></FlipClock>
+    <FlipClock :maxLength = maxLength :changeNumber = changeNumber :thousandsSeparator = thousandsSeparator></FlipClock>
   </div>
 </template>
 
@@ -14,11 +14,17 @@ export default {
   },
   data() {
     return {
-      minLength: 5,
+      thousandsSeparator: true,
+      maxLength: 5, // 数字最大位数
       changeNumber: '00000'
     }
   },
   created() {
+  },
+  mounted() {
+      let randomNumber = Math.floor(Math.random() * 100000)
+      this.changeNumber = randomNumber
+
       setInterval(() => {
         let randomNumber = Math.floor(Math.random() * 100000)
         this.changeNumber = randomNumber
