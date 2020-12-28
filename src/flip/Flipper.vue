@@ -5,16 +5,16 @@
  */
 
 <template>
-  <div class="M-Flipper">
+  <div class="M-Flipper" :style="{'border':`1px solid ${backgroundColor[0]}`}">
 
     <!-- 默认数字的上下两部分 -->
-    <div class="digital front " :class="[UpperHalfNumber]"></div>
-    <div class="digital back " :class="[BottomHalfNumber]"></div>
+    <div class="digital Front " :style="{'backgroundImage':`linear-gradient(${backgroundColor[0]}, ${backgroundColor[1]})`}">{{UpperHalfNumber}}</div>
+    <div class="digital Back " :style="{'backgroundImage':`linear-gradient(${backgroundColor[2]}, ${backgroundColor[3]})`}">{{BottomHalfNumber}}</div>
 
     <!-- 翻页动画的画册 -->
     <div class="invert" v-for="(option,index) in loop" :class="[option.loopNumber,flipType, {'go': option.going}]" :key="index">
-      <span class="after" :style="{'zIndex':option.zIndex}">{{option.index}}</span>
-      <span class="before" :style="{'zIndex':option.zIndex}">{{option.index === 0 ? 9 : option.index-1}}</span>
+      <span class="after" :style="{'zIndex':option.zIndex,'backgroundImage':`linear-gradient(${backgroundColor[2]}, ${backgroundColor[3]})`}">{{option.index}}</span>
+      <span class="before" :style="{'zIndex':option.zIndex,'backgroundImage':`linear-gradient(${backgroundColor[0]}, ${backgroundColor[1]})`}">{{option.index === 0 ? 9 : option.index-1}}</span>
     </div>
   </div>
 </template>
@@ -25,8 +25,8 @@ export default {
   data() {
     return {
       flipType: 'down', // 动画方向
-      UpperHalfNumber: 'number0', // 当前组件底板数值的上半部分
-      BottomHalfNumber: 'number0', // 当前组件底板数值的下半部分
+      UpperHalfNumber: '0', // 当前组件底板数值的上半部分
+      BottomHalfNumber: '0', // 当前组件底板数值的下半部分
 
       loop: [], // 画册动画部分页码数据
 
@@ -44,24 +44,28 @@ export default {
     duration: {
       type: Number,
       default: 400
+    },
+    backgroundColor: {
+      type: Array,
+      default: function () {
+        return ['#000', '#000', '#000', '#000']
+      }
     }
   },
   created() {
-    this.UpperHalfNumber = 'number' + this.initialValue
-    this.BottomHalfNumber = 'number' + this.initialValue
+    this.UpperHalfNumber = this.initialValue
+    this.BottomHalfNumber = this.initialValue
       // this.StartingValue = +this.initialValue
       // this.FinalValue = +this.FinalValue
   },
   mounted() {
-
-    // this.loop[0].going = true
+    // console.log('backgroundColor:', this.backgroundColor);
   },
   methods: {
-
     // 初始化动画过度板
     loopInit(start, end, cb) {
-      this.UpperHalfNumber = 'number' + start
-      this.BottomHalfNumber = 'number' + start
+      this.UpperHalfNumber = start
+      this.BottomHalfNumber = start
 
       // console.log('loopInit:', start, end);
 
@@ -80,7 +84,7 @@ export default {
                 // 单页动画结束收尾~
                 const _index = this.loop[index].index
                 this.loop[index].zIndex = 0
-                this.BottomHalfNumber = 'number' + option
+                this.BottomHalfNumber = option
 
                 // // 自毁机制
                 // 如果是最后一个，那么代表动画任务结束，执行清扫工作
@@ -127,7 +131,8 @@ export default {
         option.going = true
         option.callback()
         setTimeout(() => {
-          this.UpperHalfNumber = 'number' + option.index
+          this.UpperHalfNumber = option.index
+          // console.log('this.UpperHalfNumber', this.UpperHalfNumber);
           this.loopRunning(index + 1)
         }, 100);
       }
@@ -234,8 +239,7 @@ export default {
 
 <style scoped>
 
-.M-Flipper .digital:before,
-.M-Flipper .digital:after {
+.M-Flipper .digital{
   content: '';
   position: absolute;
   left: 0;
@@ -247,21 +251,25 @@ export default {
   z-index: 1;
 }
 
-.M-Flipper .digital.front:before {
+.M-Flipper .digital.Front {
   top: 0;
   bottom: 50%;
   border-radius: 8px 8px 0 0;
   border-bottom: solid 1px #666;
+
+  /* background-image: linear-gradient(#e66465, #9198e5); */
 }
 
-.M-Flipper .digital.back:after {
+.M-Flipper .digital.Back {
   top: 50%;
   bottom: 0;
   border-radius: 0 0 8px 8px;
   line-height: 0;
+
+  /* background-image: linear-gradient(#e66465, #9198e5) */
 }
 
-.M-Flipper .digital.back:before,
+/* .M-Flipper .digital.back:before,
 .M-Flipper .digital.front:after{
   display: none;
 }
@@ -314,5 +322,5 @@ export default {
 .M-Flipper .number9:before,
 .M-Flipper .number9:after {
   content: '9';
-}
+} */
 </style>

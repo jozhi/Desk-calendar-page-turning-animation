@@ -7,7 +7,7 @@
   <div class="FlipClock">
     <span v-for="(option,index) in FlipperSort" :key="index">
       <span class="split" v-if="thousandsSeparator && option ===','">,</span>
-      <Flipper v-else :ref="`flipper${index}`" />
+      <Flipper :backgroundColor = backgroundColor v-else :ref="`flipper${index}`" />
     </span>
   </div>
 </template>
@@ -36,14 +36,21 @@ export default {
     thousandsSeparator: {
       type: Boolean,
       default: false
+    },
+    backgroundColor: {
+      type: Array,
+      default: function () {
+        return []
+      }
     }
+
   },
   components: {
     Flipper
   },
   watch: {
     changeNumber: function (newVal, oldVal) {
-      console.log('changeNumber~~:', newVal, oldVal);
+      // console.log('changeNumber~~:', newVal, oldVal);
       this.updateView(newVal)
     }
   },
